@@ -31,6 +31,9 @@ func main() {
 		os.Exit(2)
 	}
 
+	// Remove BOM if its at the start of the file
+	contentsBytes = bytes.TrimLeft(contentsBytes, "\xef\xbb\xbf")
+
 	contents := string(contentsBytes)
 
 	contents = regexp.MustCompile(`#:orcpub.dnd.e5{`).ReplaceAllString(contents, "{")
@@ -56,7 +59,8 @@ func main() {
 		var prettyJSON bytes.Buffer
 		err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing JSON: %s", err)
+			fmt.Fprintf(os.Stderr, "Error parsing JSON: %s\n%s", err, jsonString)
+
 			os.Exit(2)
 		}
 
