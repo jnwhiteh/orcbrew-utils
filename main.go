@@ -2,6 +2,8 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -11,13 +13,18 @@ import (
 	"github.com/cespare/goclj/parse"
 )
 
+var rawOutput = flag.Bool("raw", false, "Don't pretty-print JSON output")
+
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Fprintf(os.Stderr, "usage: %s [inputfile]\n", os.Args[0])
+	flag.Parse()
+
+	args := flag.Args()
+	if len(args) != 1 {
+		printUsage()
 		os.Exit(2)
 	}
 
-	filename := os.Args[1]
+	filename := args[0]
 	contentsBytes, err := ioutil.ReadFile(filename)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed when reading file %s: %s", filename, err)
@@ -41,7 +48,25 @@ func main() {
 		os.Exit(2)
 	}
 
-	fmt.Println(treeToJSON(tt))
+	jsonString := treeToJSON(tt)
+
+	if *rawOutput {
+		fmt.Fprintf(os.Stdout, jsonString)
+	} else {
+		var prettyJSON bytes.Buffer
+		err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "Error parsing JSON: %s", err)
+			os.Exit(2)
+		}
+
+		fmt.Fprint(os.Stdout, prettyJSON.String())
+	}
+}
+
+func printUsage() {
+	fmt.Fprintf(os.Stderr, "Usage: %s [OPTIONS] inputFile\n", os.Args[0])
+	flag.PrintDefaults()
 }
 
 func treeToJSON(tree *parse.Tree) string {
