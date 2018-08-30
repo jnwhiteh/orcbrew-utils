@@ -3,6 +3,7 @@ package schema
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"testing"
@@ -25,6 +26,49 @@ type testData struct {
 
 	// Map from filename to compilations
 	sourceCompilations map[string]OrcbrewExportAll
+}
+
+func LoadSourceFromExportAll(t *testing.T, filename string, optionPack string) (OrcbrewSource, string) {
+	combinedFilename := GetCombinedFilename(filename, optionPack)
+
+	_, ok := TestData.sourceData[combinedFilename]
+	if !ok {
+		// Try to load the file
+		file, err := os.Open(filename)
+		if err != nil {
+			t.Fatalf("Error loading %s: %s", filename, err)
+		}
+		defer file.Close()
+
+		jsonBytes, err := ioutil.ReadAll(file)
+		if err != nil {
+			t.Fatalf("Error reading %s: %s", filename, err)
+		}
+
+		var newCompilation OrcbrewExportAll
+		err = json.Unmarshal(jsonBytes, &newCompilation)
+		if err != nil {
+			t.Fatalf("Error parsing %s: %s", filename, err)
+		}
+
+		var newCompilationAsMap = make(map[string]interface{})
+		err = json.Unmarshal(jsonBytes, &newCompilationAsMap)
+		if err != nil {
+			t.Fatalf("Failed to read in as map %s: %s", filename, err)
+		}
+
+		for optionPack, newSource := range newCompilation {
+			pretty, err := json.MarshalIndent(newCompilationAsMap[optionPack], "", "  ")
+			if err != nil {
+				t.Fatalf("Failed indenting %s: %s", filename, err)
+			}
+
+			TestData.fileContents[combinedFilename] = string(pretty)
+			TestData.sourceData[combinedFilename] = newSource
+		}
+	}
+
+	return TestData.sourceData[combinedFilename], TestData.fileContents[combinedFilename]
 }
 
 func LoadSourceFile(t *testing.T, filename string) (OrcbrewSource, string) {
@@ -59,6 +103,10 @@ func LoadSourceFile(t *testing.T, filename string) (OrcbrewSource, string) {
 	}
 
 	return TestData.sourceData[filename], TestData.fileContents[filename]
+}
+
+func GetCombinedFilename(filename string, optionPack string) string {
+	return fmt.Sprintf("%s::%s", filename, optionPack)
 }
 
 // Return the JSON string for a top-level key such as "languages"
