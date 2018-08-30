@@ -276,180 +276,174 @@ type InvocationConfig struct {
 
 // SubraceConfig defines a new sub-race option
 type SubraceConfig struct {
-	Key        string
+	Key        string `json:"key"`
 	OptionPack string `json:"option-pack"`
 
-	Name       string
-	Race       string
-	Abilities  map[Ability]int
-	Languages  []string
-	Darkvision int
-	Size       Size
-	Speed      int
+	Name       string            `json:"name"`
+	Race       string            `json:"race"`
+	Abilities  map[Ability]int   `json:"abilities,omitempty"`
+	Languages  []string          `json:"languages,omitempty"`
+	Darkvision int               `json:"darkvision,omitempty"`
+	Size       Size              `json:"size,omitempty"`
+	Speed      int               `json:"speed,omitempty"`
+	Spells     []RaceSpellConfig `json:"spells,omitempty"`
 
-	Props *SubraceProperties
-	Profs *SubraceProficiencies
+	Props *SubraceProperties `json:"props,omitempty"`
+	Profs *RaceProficiencies `json:"profs,omitempty"`
 
-	Traits []LevelTrait
+	Traits []LevelTrait `json:"traits"`
 }
 
 type SubraceProperties struct {
-	FlyingSpeed          int                `json:"flying-speed"`
-	SkillProficiency     map[Skill]bool     `json:"skill-prof"`
-	DamageImmunity       map[Damage]bool    `json:"damage-immunity"`
-	DamageResistance     map[Damage]bool    `json:"damage-resistance"`
-	SavingThrowAdvantage map[Condition]bool `json:"saving-throw-advantage"`
-	ArmorProficiency     map[Armor]bool     `json:"armor-prof"`
-	WeaponProficiency    map[string]bool    `json:"weapon-prof"`
-	HitPointLevelBonus   int                `json:"hit-point-level-bonus"`
-	ToolProficiency      map[string]bool    `json:"tool-prof"`
-	LizardfolkAC         bool               `json:"lizardfolk-ac"` // TODO: What is this?
-	TortleAC             bool               `json:"tortle-ac"`     // TODO: What is this?
-}
-
-type SubraceProficiencies struct {
-	LanguageOptions        *LanguageConfig         `json:"language-options"`
-	SkillOptions           *SkillOptions           `json:"skill-options"`
-	ToolOptions            *ToolOptions            `json:"tool-options"`
-	AbilityIncreaseOptions *AbilityIncreaseOptions `json:"ability-increase-options"`
-	FeatOptions            *FeatOptions            `json:"feat-options"`
-	SpellOptions           *SpellOptions           `json:"spell-options"`
+	FlyingSpeed          int                `json:"flying-speed,omitempty"`
+	SkillProficiency     map[Skill]bool     `json:"skill-prof,omitempty"`
+	DamageImmunity       map[Damage]bool    `json:"damage-immunity,omitempty"`
+	DamageResistance     map[Damage]bool    `json:"damage-resistance,omitempty"`
+	ArmorProficiency     map[Armor]bool     `json:"armor-prof,omitempty"`
+	WeaponProficiency    map[string]bool    `json:"weapon-prof,omitempty"`
+	SavingThrowAdvantage map[Condition]bool `json:"saving-throw-advantage,omitempty"`
+	Language             map[string]bool    `json:"language,omitempty"`
+	MaxHpBonus           int                `json:"max-hp-bonus,omitempty"`
 }
 
 type ToolOptions struct {
-	Choose  int
-	Options map[string]bool
+	Choose  int             `json:"choose"`
+	Options map[string]bool `json:"options,omitempty"`
 }
 
 type AbilityIncreaseOptions struct {
-	Choose  int
-	Amount  int
-	Options map[Ability]bool
+	Choose  int              `json:"choose"`
+	Amount  int              `json:"amount"`
+	Options map[Ability]bool `json:"options,omitempty"`
 }
 
 type FeatOptions struct {
-	Choose  int
-	Options map[string]bool
+	Choose  int             `json:"choose"`
+	Options map[string]bool `json:"options,omitempty"`
 }
 
 type SpellOptions struct {
-	Choose    int
-	Options   map[string]bool // A list of specific options
-	SpellList []string        // The name of a pre-defined spell list
+	Choose    int             `json:"choose"`
+	Options   map[string]bool `json:"options"`              // A list of specific options
+	SpellList []string        `json:"spell-list,omitempty"` // The name of a pre-defined spell list
 }
 
 type SpellConfig struct {
-	Key        string
+	Key        string `json:"key"`
 	OptionPack string `json:"option-pack"`
 
-	Name        string
-	Description string
+	Name        string `json:"name"`
+	Description string `json:"description"`
 
-	Level       int
-	School      string
-	Duration    string
-	Components  *SpellComponents
-	Ritual      bool
-	AttackRoll  bool            `json:"attack-roll?"` // Spelling incorrect in orcbrew
-	CastingTime string          `json:"casting-time"`
-	SpellLists  map[string]bool `json:"spell-lists"`
-	Range       string
+	Level       int              `json:"level"`
+	School      string           `json:"school"`
+	Duration    string           `json:"duration"`
+	Components  *SpellComponents `json:"components"`
+	Ritual      bool             `json:"ritual"`
+	AttackRoll  bool             `json:"attack-roll?"` // Spelling incorrect in orcbrew
+	CastingTime string           `json:"casting-time"`
+	SpellLists  map[string]bool  `json:"spell-lists"`
+	Range       string           `json:"range"`
 }
 
 type SpellComponents struct {
 	MaterialComponent string `json:"material-component,omitempty"`
-	Verbal            bool
-	Material          bool
-	Somatic           bool
+	Verbal            bool   `json:"verbal"`
+	Material          bool   `json:"material"`
+	Somatic           bool   `json:"somatic"`
 }
 
 type EncounterConfig struct {
-	Key        string
+	Key        string `json:"key"`
 	OptionPack string `json:"option-pack"`
 
-	Name      string
-	Creatures []EncounterCreature
+	Name      string              `json:"name"`
+	Creatures []EncounterCreature `json:"creatures"`
 }
 
 type EncounterCreature struct {
-	Type string // always "monster" except for NPCs
+	Type string `json:"type"` // always "monster" except for NPCs
 
 	// TODO: Support NPCs?
-	Creature EncounterCreatureConfig
+	Creature EncounterCreatureConfig `json:"creature"`
 }
 
 type EncounterCreatureConfig struct {
-	Num     int
-	Monster string
+	Num     int    `json:"num"`
+	Monster string `json:"monster"`
 }
 
 type SelectionConfig struct {
-	Key        string
-	Name       string
-	OptionPack string `json:"option-pack"`
-	Options    []SelectionOption
+	Key        string            `json:"key"`
+	Name       string            `json:"name"`
+	OptionPack string            `json:"option-pack"`
+	Options    []SelectionOption `json:"options"`
 }
 
 type SelectionOption struct {
-	Name        string
-	Description string
+	Name        string `json:"name"`
+	Description string `json:"description"`
 }
 
 type RaceConfig struct {
-	Key        string
-	Name       string
+	Key        string `json:"key"`
+	Name       string `json:"name"`
 	OptionPack string `json:"option-pack"`
 
-	Abilities  map[Ability]int
-	Languages  []string
-	Darkvision int
-	Size       Size
-	Speed      int
+	Abilities  map[Ability]int `json:"abilities"`
+	Languages  []string        `json:"languages"`
+	Darkvision int             `json:"darkvision"`
+	Size       Size            `json:"size"`
+	Speed      int             `json:"speed"`
 
-	Spells []RaceSpellConfig
-	Props  *RaceProperties
-	Profs  *RaceProficiencies
+	Spells []RaceSpellConfig  `json:"spells"`
+	Props  *RaceProperties    `json:"props"`
+	Profs  *RaceProficiencies `json:"profs"`
 
-	Traits []LevelTrait
+	Traits []LevelTrait `json:"traits"`
 }
 
 type RaceSpellConfig struct {
-	Value SpellWithAbilityLevel
+	Value SpellWithAbilityLevel `json:"value"`
 }
 
 type SpellWithAbilityLevel struct {
-	Level   int
-	Key     string
-	Ability Ability
+	Level   int     `json:"level,omitempty"`
+	Key     string  `json:"key"`
+	Ability Ability `json:"ability"`
 }
 
 type RaceProperties struct {
-	FlyingSpeed       int             `json:"flying-speed"`
-	SkillProficiency  map[Skill]bool  `json:"skill-prof"`
-	DamageImmunity    map[Damage]bool `json:"damage-immunity"`
-	DamageResistance  map[Damage]bool `json:"damage-resistance"`
-	ArmorProficiency  map[Armor]bool  `json:"armor-prof"`
-	WeaponProficiency map[string]bool `json:"weapon-prof"`
-	LizardfolkAC      bool            `json:"lizardfolk-ac"` // TODO: What is this?
-	TortleAC          bool            `json:"tortle-ac"`     // TODO: What is this?
+	FlyingSpeed          int                `json:"flying-speed,omitempty"`
+	SkillProficiency     map[Skill]bool     `json:"skill-prof,omitempty"`
+	DamageImmunity       map[Damage]bool    `json:"damage-immunity,omitempty"`
+	DamageResistance     map[Damage]bool    `json:"damage-resistance,omitempty"`
+	ArmorProficiency     map[Armor]bool     `json:"armor-prof,omitempty"`
+	WeaponProficiency    map[string]bool    `json:"weapon-prof,omitempty"`
+	SavingThrowAdvantage map[Condition]bool `json:"saving-throw-advantage,omitempty"`
+	Language             map[string]bool    `json:"language,omitempty"`
+	MaxHpBonus           int                `json:"max-hp-bonus,omitempty"`
+	LizardfolkAC         bool               `json:"lizardfolk-ac"`       // TODO: What is this?
+	TortleAC             bool               `json:"tortle-ac,omitempty"` // TODO: What is this?
 }
 
 type RaceProficiencies struct {
-	LanguageOptions          *RaceLanguageOptions          `json:"language-options"`
-	ToolOptions              map[string]bool               `json:"tool"`
-	SkillOptions             *RaceSkillOptions             `json:"skill-options"`
-	WeaponProficiencyOptions *RaceWeaponProficiencyOptions `json:"weapon-proficiency-options"`
+	LanguageOptions          *RaceLanguageOptions          `json:"language-options,omitempty"`
+	ToolOptions              map[string]bool               `json:"tool,omitempty"`
+	SkillOptions             *RaceSkillOptions             `json:"skill-options,omitempty"`
+	WeaponProficiencyOptions *RaceWeaponProficiencyOptions `json:"weapon-proficiency-options,omitempty"`
 }
 
 type RaceLanguageOptions struct {
 	// TODO: This seems to be false? Huh?
-	Options map[string]bool
+	Options map[string]bool `json:"options"`
 }
 
 type RaceWeaponProficiencyOptions struct {
-	Options map[string]bool
+	Options map[string]bool `json:"options"`
 }
 
 type RaceSkillOptions struct {
-	Options map[Skill]bool
+	Choose  int            `json:"choose,omitempty"`
+	Options map[Skill]bool `json:"options"`
 }

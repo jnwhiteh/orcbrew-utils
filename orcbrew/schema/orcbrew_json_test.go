@@ -48,6 +48,11 @@ func TestWholeFile(t *testing.T) {
 		"feats":       source.Feats,
 		"backgrounds": source.Backgrounds,
 		"invocations": source.Invocations,
+		"subraces":    source.Subraces,
+		"spells":      source.Spells,
+		"encounters":  source.Encounters,
+		"selections":  source.Selections,
+		"races":       source.Races,
 	}
 
 	for key, obj := range config {
