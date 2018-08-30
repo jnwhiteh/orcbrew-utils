@@ -1,0 +1,406 @@
+{:orcpub.dnd.e5/languages
+ {:pig-latin
+  {:description "Pig latin"
+   :key :pig-latin
+   :name "Pig latin"
+   :option-pack "Test"}}
+ :orcpub.dnd.e5/classes
+ {:myclass
+  {nil nil
+   :key :myclass
+   :level-modifiers
+   [{:value :bludgeoning, :type :damage-immunity}
+    {:value :blinded, :type :saving-throw-advantage, :level 2}
+    {:value {:key :druidcraft, :ability :orcpub.dnd.e5.character/str}
+     :type :spell}]
+   :name "MyClass"
+   :subclass-level 2
+   :option-pack "Test"
+   :subclass-title "MySubclassTitle"
+   :level-selections [{:num 2, :type :my-selection-thingy}]
+   :spellcasting
+   {:ability :orcpub.dnd.e5.character/cha
+    :known-mode :schedule
+    :spell-list-kw :bard
+    :level-factor 3
+    :spells-known
+    {3 3, 4 1, 7 1, 8 1, 10 1, 11 1, 13 1, 14 1, 16 1, 19 1, 20 1}}
+   :ability-increase-levels [4 8 12 16 19]
+   :profs
+   {:save {:orcpub.dnd.e5.character/str true}
+    :skill-expertise-options
+    {:choose 2
+     :options {:acrobatics true, :animal-handling true, :arcana true}}
+    :skill-options {:options {:acrobatics true}}}
+   :hit-die 6
+   :traits
+   [{:description "This is a class trait", :name "MyClassTrait", :level 2}]}
+  :anotherclass
+  {:key :anotherclass
+   :level-modifiers []
+   :name "AnotherClass"
+   :option-pack "Test"
+   :spellcasting
+   {:ability :orcpub.dnd.e5.character/cha
+    :known-mode :schedule
+    :spell-list
+    {1 #{:burning-hands :speak-with-animals}
+     2 #{:heat-metal :melfs-acid-arrow :mirror-image}
+     3 #{:gaseous-form :phantom-steed :mass-healing-word :sending}
+     4 #{:leomunds-secret-chest :fire-shield}
+     5 #{:creation}
+     6 #{:word-of-recall}
+     7 #{:plane-shift}
+     8 #{:control-weather}
+     9 #{:storm-of-vengeance :time-stop}}
+    :level-factor 1
+    :spells-known
+    {1 2
+     2 1
+     3 1
+     4 1
+     5 1
+     6 1
+     7 1
+     8 1
+     9 1
+     10 1
+     11 1
+     13 1
+     15 1
+     17 1}}
+   :ability-increase-levels [4 8 12 16 19]
+   :hit-die 6
+   :traits []}}
+ :orcpub.dnd.e5/subclasses
+ {:mysubclass
+  {:key :mysubclass
+   :level-modifiers
+   [{:value :light, :type :armor-prof}
+    {:value :athletics, :type :skill-prof, :level 3}]
+   :name "MySubClass"
+   :option-pack "Test"
+   :level-selections [{:num 2, :type :my-selection-thingy, :level 3}]
+   :class :barbarian
+   :profs
+   {:skill-expertise-options
+    {:choose 2
+     :options {:acrobatics true, :animal-handling true, :arcana true}}
+    :skill-options {:options {:acrobatics false}}}
+   :traits
+   [{:description "This is a subclass trait", :name "My subclass trait"}]}}
+ :orcpub.dnd.e5/monsters
+ {:mymonster
+  {:description "Description of MyMonster"
+   :legendary-actions {:description "I have some legendary actions"}
+   :key :mymonster
+   :int 10
+   :speed "30 ft."
+   :name "MyMonster"
+   :alignment "neutral"
+   :cha 10
+   :hit-points {:die 8, :die-count 1}
+   :type :aberration
+   :size :large
+   :option-pack "Test"
+   :armor-class 10
+   :skills {:performance 2, :survival 2, :history 4, :stealth 2}
+   :str 10
+   :saving-throws {:int 1, :cha 1, :str 0, :con 1, :dex 0, :wis 0}
+   :challenge 1
+   :con 10
+   :dex 10
+   :wis 10
+   :props
+   {:damage-vulnerability {:acid true}
+    :damage-immunity {:acid true}
+    :language {:elvish true, :abyssal true}
+    :condition-immunity {:blinded true}
+    :damage-resistance {:lightning false, :slashing false, :traps true}}
+   :traits
+   [{:description "Beat someone up.", :name "Multi-attack", :type :action}
+    {:description "I bathe you in fire!!!"
+     :name "Dragon breath"
+     :type :legendary-action}]}}
+ :orcpub.dnd.e5/feats
+ {:myfeat
+  {:description "This is my feat"
+   :path-prereqs
+   {:race
+    {:elf true
+     :half-orc true
+     :human true
+     :gnome true
+     :myrace true
+     :tiefling true
+     :dragonborn true
+     :dwarf true
+     :halfling true
+     :half-elf true}}
+   :prereqs
+   #{:orcpub.dnd.e5.character/str
+     :orcpub.dnd.e5.character/con
+     :orcpub.dnd.e5.character/dex
+     :medium
+     :orcpub.dnd.e5.character/wis
+     :heavy
+     :spellcasting
+     :orcpub.dnd.e5.character/int
+     :orcpub.dnd.e5.character/cha
+     :light}
+   :key :myfeat
+   :name "MyFeat"
+   :option-pack "Test"
+   :ability-increases
+   #{:orcpub.dnd.e5.character/str
+     :saves?
+     :orcpub.dnd.e5.character/con
+     :orcpub.dnd.e5.character/int
+     :orcpub.dnd.e5.character/dex
+     :orcpub.dnd.e5.character/wis
+     :orcpub.dnd.e5.character/cha}
+   :props
+   {:max-hp-bonus 2
+    :passive-investigation-5 true
+    :magic-novice true
+    :medium-armor-max-dex-3 true
+    :speed 15
+    :ritual-casting true
+    :passive-perception-5 true
+    :initiative 2
+    :weapon-prof-choice 3
+    :two-weapon-any-one-handed true
+    :saving-throw-advantage-traps true
+    :language-choice 2
+    :armor-prof {:medium true, :heavy true, :light true, :shields true}
+    :improvised-weapons-prof true
+    :attack-spell true
+    :two-weapon-ac-1 true
+    :skill-tool-choice 2
+    :medium-armor-stealth true
+    :skill-prof-or-expertise
+    {:religion true
+     :persuasion true
+     :investigation true
+     :acrobatics true
+     :performance true
+     :perception true
+     :sleight-of-hand true
+     :survival true
+     :history true
+     :animal-handling true
+     :nature true
+     :deception true
+     :intimidation true
+     :arcana true
+     :athletics true
+     :insight true
+     :medicine true
+     :stealth true}
+    :damage-resistance
+    {:fire true
+     :acid true
+     :psychic true
+     :force true
+     :bludgeoning true
+     :radiant true
+     :lightning true
+     :slashing true
+     :piercing true
+     :thunder true
+     :cold true
+     :traps true
+     :poison true
+     :necrotic true}
+    :tool-prof-or-expertise
+    {:cartographers-tools true
+     :painters-supplies true
+     :navigators-tools true
+     :glassblowers-tools true
+     :flute true
+     :poisoners-tools true
+     :dice-set true
+     :horn true
+     :herbalism-kit true
+     :dulcimer true
+     :disguise-kit true
+     :masons-tools true
+     :land-vehicles true
+     :thieves-tools true
+     :jewelers-tools true
+     :leatherworkers-tools true
+     :smiths-tools true
+     :drum true
+     :cobblers-tools true
+     :potters-tools true
+     :dragonchess-set true
+     :playing-card-set true
+     :brewers-supplies true
+     :three-dragon-ante-set true
+     :forgery-kit true
+     :pan-flute true
+     :bagpipes true
+     :woodcarvers-tools true
+     :carpenters-tools true
+     :tinkers-tools true
+     :alchemists-supplies true
+     :water-vehicles true
+     :weavers-tools true
+     :shawm true
+     :cooks-utensils true
+     :lute true
+     :calligraphers-supplies true
+     :lyre true}}}}
+ :orcpub.dnd.e5/backgrounds
+ {:mybackground
+  {:key :mybackground
+   :name "MyBackground"
+   :equipment
+   {:clothes-common 1
+    :abacus 1
+    :disguise-kit 1
+    :amulet 1
+    :alchemists-supplies 1}
+   :treasure {:gp 10}
+   :equipment-choices
+   ({:name "Musical Instruments"
+     :options
+     {:flute 1
+      :horn 1
+      :dulcimer 1
+      :viol 1
+      :drum 1
+      :pan-flute 1
+      :bagpipes 1
+      :shawm 1
+      :lute 1
+      :lyre 1}}
+    {:name "Artisan's Tools"
+     :options
+     {:cartographers-tools 1
+      :painters-supplies 1
+      :glassblowers-tools 1
+      :masons-tools 1
+      :jewelers-tools 1
+      :leatherworkers-tools 1
+      :smiths-tools 1
+      :cobblers-tools 1
+      :potters-tools 1
+      :brewers-supplies 1
+      :woodcarvers-tools 1
+      :carpenters-tools 1
+      :tinkers-tools 1
+      :alchemists-supplies 1
+      :weavers-tools 1
+      :cooks-utensils 1
+      :calligraphers-supplies 1}})
+   :option-pack "Test"
+   :profs
+   {:language-options {:choose 1, :options {:any true}}
+    :skill {:acrobatics true}
+    :tool
+    {:disguise-kit true, :alchemists-supplies true, :water-vehicles true}
+    :tool-options {:musical-instrument 1, :gaming-set 2}}
+   :traits [{:description "This is a trait", :name "Some trait"}]}}
+ :orcpub.dnd.e5/invocations
+ {:myeldritchinvocation
+  {:description
+   "I don't know why this is a separate concept, instead of being a selection itself."
+   :key :myeldritchinvocation
+   :name "MyEldritchInvocation"
+   :option-pack "Test"}}
+ :orcpub.dnd.e5/subraces
+ {:mysubrace
+  {:key :mysubrace
+   :race :human
+   :name "MySubRace"
+   :darkvision 120
+   :spells
+   [{:value {:key :chill-touch, :ability :orcpub.dnd.e5.character/con}}]
+   :abilities {:orcpub.dnd.e5.character/str 1, :orcpub.dnd.e5.character/int 1}
+   :option-pack "Test"
+   :profs
+   {:tool {:bagpipes true}
+    :skill-options {:choose 2, :options {:acrobatics false}}}
+   :props
+   {:skill-prof {:acrobatics true}
+    :max-hp-bonus 2
+    :damage-immunity {:acid true}
+    :saving-throw-advantage {:blinded true}
+    :weapon-prof {:simple true, :light-hammer true}
+    :armor-prof {:light true}
+    :language {:deep-speech true, :abyssal true}
+    :damage-resistance {:traps true}}
+   :traits
+   [{:description "This is yet another trait", :name "Another trait"}]}}
+ :orcpub.dnd.e5/spells
+ {:myspell
+  {:description "Casting a spell"
+   :key :myspell
+   :school "necromancy"
+   :name "MySpell"
+   :duration "1 hour"
+   :level 0
+   :option-pack "Test"
+   :components
+   {:material-component "A pinch of salt"
+    :verbal true
+    :material true
+    :somatic true}
+   :ritual true
+   :attack-roll? true
+   :casting-time "1 action"
+   :spell-lists
+   {:cleric true
+    :druid true
+    :ranger true
+    :sorcerer true
+    :wizard true
+    :warlock true
+    :paladin true
+    :bard true}
+   :range "10 ft."}}
+ :orcpub.dnd.e5/encounters
+ {:goblin-ambush
+  {:key :goblin-ambush
+   :name "Goblin Ambush"
+   :option-pack "Test"
+   :creatures [{:type :monster, :creature {:num 3, :monster :goblin}}]}}
+ :orcpub.dnd.e5/selections
+ {:my-selection-thingy
+  {:key :my-selection-thingy
+   :name "My selection thingy"
+   :option-pack "Test"
+   :options
+   [{:description "I have a fire thingy", :name "Fire thingy"}
+    {:description "I've got another frost thingy", :name "Frost thingy"}]}}
+ :orcpub.dnd.e5/races
+ {:myrace
+  {:key :myrace
+   :speed 30
+   :name "MyRace"
+   :darkvision 60
+   :spells
+   [{:value {:key :acid-splash, :ability :orcpub.dnd.e5.character/cha}}
+    {:value {:key :aid, :ability :orcpub.dnd.e5.character/cha, :level 2}}]
+   :abilities {:orcpub.dnd.e5.character/str 1, :orcpub.dnd.e5.character/con 1}
+   :size :medium
+   :option-pack "Test"
+   :profs
+   {:language-options {:options {:common false}}
+    :tool {:bagpipes true}
+    :weapon-proficiency-options
+    {:options {:shortbow true, :crossbow-light true, :dart false}}
+    :skill-options {:options {:acrobatics false}}}
+   :languages #{"Abyssal"}
+   :props
+   {:skill-prof {:acrobatics true}
+    :damage-immunity {:acid true}
+    :weapon-prof {:simple true, :light-hammer true}
+    :armor-prof {:light true}
+    :lizardfolk-ac false
+    :tortle-ac true
+    :flying-speed 10
+    :damage-resistance {:traps true}}
+   :traits
+   [{:description "This is truly an awesome trait", :name "Awesome trait"}]}}}
