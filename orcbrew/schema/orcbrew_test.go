@@ -1,57 +1,87 @@
 package schema
 
 import (
+	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"os"
-	"regexp"
-	"strings"
 	"testing"
 
 	"github.com/go-test/deep"
 )
 
-var rawSourceJSON string
-var testSource OrcbrewSource
-var loaded bool
-
-func getTestDataJSON(t *testing.T, key string) string {
-	s := fmt.Sprintf(`(?s)\n  "%s": ({.*?\n  }),?\n`, key)
-	re := regexp.MustCompile(s)
-	matches := re.FindStringSubmatch(rawSourceJSON)
-
-	if len(matches) <= 0 {
-		return ""
-	}
-
-	return strings.TrimSpace(matches[1])
+var TestData = testData{
+	fileContents:       make(map[string]string),
+	sourceData:         make(map[string]OrcbrewSource),
+	sourceCompilations: make(map[string]OrcbrewExportAll),
 }
 
-func getTestData(t *testing.T) OrcbrewSource {
-	if !loaded {
-		filename := "example.json"
+type testData struct {
+	// Map from filename to JSON string, pretty-printed
+	fileContents map[string]string
+
+	// Map from filename to source data
+	sourceData map[string]OrcbrewSource
+
+	// Map from filename to compilations
+	sourceCompilations map[string]OrcbrewExportAll
+}
+
+func LoadSourceFile(t *testing.T, filename string) (OrcbrewSource, string) {
+	_, ok := TestData.fileContents[filename]
+	if !ok {
+		// Try to load the file
 		file, err := os.Open(filename)
 		if err != nil {
 			t.Fatalf("Error loading %s: %s", filename, err)
 		}
 		defer file.Close()
 
-		buf, err := ioutil.ReadAll(file)
-		rawSourceJSON = string(buf)
-
-		err = json.Unmarshal(buf, &testSource)
+		jsonBytes, err := ioutil.ReadAll(file)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("Error reading %s: %s", filename, err)
 		}
-		loaded = true
+
+		var newSource OrcbrewSource
+		err = json.Unmarshal(jsonBytes, &newSource)
+		if err != nil {
+			t.Fatalf("Error parsing %s: %s", filename, err)
+		}
+
+		prettyBuffer := &bytes.Buffer{}
+		err = json.Indent(prettyBuffer, jsonBytes, "", "  ")
+		if err != nil {
+			t.Fatalf("Failed indenting %s: %s", filename, err)
+		}
+
+		TestData.fileContents[filename] = prettyBuffer.String()
+		TestData.sourceData[filename] = newSource
 	}
 
-	return testSource
+	return TestData.sourceData[filename], TestData.fileContents[filename]
+}
+
+// Return the JSON string for a top-level key such as "languages"
+func GetJSONKeyFromSource(t *testing.T, filename string, key string) string {
+	_, sourceJSON := LoadSourceFile(t, filename)
+
+	var m = make(map[string]interface{})
+	err := json.Unmarshal([]byte(sourceJSON), &m)
+	if err != nil {
+		t.Errorf("Failed to load sourceJSON into map for file %s: %s", filename, err)
+	}
+
+	subObject := m[key]
+	buf, err := json.MarshalIndent(subObject, "", "  ")
+	if err != nil {
+		t.Errorf("Failed to load sourceJSON into map for file %s: %s", filename, err)
+	}
+
+	return string(buf)
 }
 
 func TestLanguages(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Languages) != 1 {
 		t.Errorf("Expected 1 languages got %v", len(source.Languages))
@@ -71,7 +101,7 @@ func TestLanguages(t *testing.T) {
 }
 
 func TestClasses(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Classes) != 2 {
 		t.Errorf("Expected 2 classes, got %v", len(source.Classes))
@@ -147,7 +177,7 @@ func TestClasses(t *testing.T) {
 }
 
 func TestSubClasses(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Subclasses) != 1 {
 		t.Errorf("Expected 1 subclass, got %v", len(source.Subclasses))
@@ -198,7 +228,7 @@ func TestSubClasses(t *testing.T) {
 }
 
 func TestMonsters(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Monsters) != 1 {
 		t.Errorf("Expected 1 monster, got %v", len(source.Subclasses))
@@ -277,7 +307,7 @@ func TestMonsters(t *testing.T) {
 }
 
 func TestFeats(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Feats) != 1 {
 		t.Errorf("Expected 1 feat, got %v", len(source.Feats))
@@ -433,7 +463,7 @@ func TestFeats(t *testing.T) {
 }
 
 func TestBackgrounds(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Backgrounds) != 1 {
 		t.Errorf("Expected 1 background, got %v", len(source.Backgrounds))
@@ -527,7 +557,7 @@ func TestBackgrounds(t *testing.T) {
 }
 
 func TestInvocations(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Invocations) != 1 {
 		t.Errorf("Expected 1 invocation, got %v", len(source.Invocations))
@@ -547,7 +577,7 @@ func TestInvocations(t *testing.T) {
 }
 
 func TestSubraces(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Subraces) != 1 {
 		t.Errorf("Expected 1 subrace, got %v", len(source.Invocations))
@@ -568,7 +598,7 @@ func TestSubraces(t *testing.T) {
 }
 
 func TestSpells(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Spells) != 1 {
 		t.Errorf("Expected 1 spell, got %v", len(source.Spells))
@@ -613,7 +643,7 @@ func TestSpells(t *testing.T) {
 }
 
 func TestEncounters(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Encounters) != 1 {
 		t.Errorf("Expected 1 encounter, got %v", len(source.Encounters))
@@ -640,7 +670,7 @@ func TestEncounters(t *testing.T) {
 	}
 }
 func TestSelections(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Selections) != 1 {
 		t.Errorf("Expected 1 selection, got %v", len(source.Encounters))
@@ -670,7 +700,7 @@ func TestSelections(t *testing.T) {
 }
 
 func TestRaces(t *testing.T) {
-	source := getTestData(t)
+	source, _ := LoadSourceFile(t, "example.json")
 
 	if len(source.Races) != 1 {
 		t.Errorf("Expected 1 race, got %v", len(source.Races))

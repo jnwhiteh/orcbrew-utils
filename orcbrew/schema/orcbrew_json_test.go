@@ -7,7 +7,7 @@ import (
 	"github.com/go-test/deep"
 )
 
-func testMarshalUnmarshal(t *testing.T, output interface{}, sourceKey string) {
+func testMarshalUnmarshal(t *testing.T, filename string, output interface{}, sourceKey string) {
 	// Convert output object into JSON
 	outputJSON, err := json.MarshalIndent(output, "", "  ")
 	if err != nil {
@@ -15,7 +15,7 @@ func testMarshalUnmarshal(t *testing.T, output interface{}, sourceKey string) {
 	}
 
 	// Fetch original source with the given key
-	sourceJSON := getTestDataJSON(t, sourceKey)
+	sourceJSON := GetJSONKeyFromSource(t, filename, sourceKey)
 
 	if sourceJSON == "" && string(outputJSON) == "null" {
 		return
@@ -35,14 +35,14 @@ func testMarshalUnmarshal(t *testing.T, output interface{}, sourceKey string) {
 	}
 
 	if diff := deep.Equal(sourceData, outputData); diff != nil {
-		t.Logf("Source data:\n%s", sourceJSON)
 		t.Logf("Output data:\n%s", outputJSON)
-		t.Error(diff)
+		t.Fatal(diff)
 	}
 }
 
 func TestWholeFile(t *testing.T) {
-	source := getTestData(t)
+	filename := "example.json"
+	source, _ := LoadSourceFile(t, filename)
 
 	config := map[string]interface{}{
 		"languages":   source.Languages,
@@ -60,6 +60,6 @@ func TestWholeFile(t *testing.T) {
 	}
 
 	for key, obj := range config {
-		testMarshalUnmarshal(t, obj, key)
+		testMarshalUnmarshal(t, filename, obj, key)
 	}
 }
