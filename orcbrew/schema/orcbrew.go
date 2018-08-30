@@ -9,18 +9,18 @@ type OrcbrewExportAll map[string]OrcbrewSource
 // OrcbrewSource is the data structure used for an individual source that has
 // been exported.
 type OrcbrewSource struct {
-	Languages   map[string]LanguageConfig
-	Classes     map[string]ClassConfig
-	Subclasses  map[string]SubclassConfig
-	Monsters    map[string]MonsterConfig
-	Feats       map[string]FeatConfig
-	Backgrounds map[string]BackgroundConfig
-	Invocations map[string]InvocationConfig
-	Subraces    map[string]SubraceConfig
-	Spells      map[string]SpellConfig
-	Encounters  map[string]EncounterConfig
-	Selections  map[string]SelectionConfig
-	Races       map[string]RaceConfig
+	Languages   map[string]LanguageConfig   `json:"languages,omitempty"`
+	Classes     map[string]ClassConfig      `json:"classes,omitempty"`
+	Subclasses  map[string]SubclassConfig   `json:"subclasses,omitempty"`
+	Monsters    map[string]MonsterConfig    `json:"monsters,omitempty"`
+	Feats       map[string]FeatConfig       `json:"feats,omitempty"`
+	Backgrounds map[string]BackgroundConfig `json:"backgrounds,omitempty"`
+	Invocations map[string]InvocationConfig `json:"invocations,omitempty"`
+	Subraces    map[string]SubraceConfig    `json:"subraces,omitempty"`
+	Spells      map[string]SpellConfig      `json:"spells,omitempty"`
+	Encounters  map[string]EncounterConfig  `json:"encounters,omitempty"`
+	Selections  map[string]SelectionConfig  `json:"selections,omitempty"`
+	Races       map[string]RaceConfig       `json:"races,omitempty"`
 }
 
 // LanguageConfig defines a language that can be spoken/written/read
@@ -62,6 +62,8 @@ type SubclassConfig struct {
 
 	Name  string `json:"name"`
 	Class string `json:"class"` // the class this is a subclass for
+
+	ClericSpells map[string]map[string]string `json:"cleric-spells,omitempty"`
 
 	// The spellcasting configuration for this class (if any)
 	Spellcasting *SpellcastingConfig `json:",omitempty"`

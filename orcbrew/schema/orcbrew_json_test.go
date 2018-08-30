@@ -17,6 +17,10 @@ func testMarshalUnmarshal(t *testing.T, output interface{}, sourceKey string) {
 	// Fetch original source with the given key
 	sourceJSON := getTestDataJSON(t, sourceKey)
 
+	if sourceJSON == "" && string(outputJSON) == "null" {
+		return
+	}
+
 	var sourceData map[string]interface{}
 	var outputData map[string]interface{}
 

@@ -21,6 +21,10 @@ func getTestDataJSON(t *testing.T, key string) string {
 	re := regexp.MustCompile(s)
 	matches := re.FindStringSubmatch(rawSourceJSON)
 
+	if len(matches) <= 0 {
+		return ""
+	}
+
 	return strings.TrimSpace(matches[1])
 }
 
