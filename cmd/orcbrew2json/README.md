@@ -7,5 +7,5 @@ converting it into JSON.
 
 You should be able to fetch this using the following:
 
-    go get github.com/jnwhiteh/orcbrew2json/cmd/orcbrew2json
+    go get github.com/jnwhiteh/orcbrew-utils/cmd/orcbrew2json
 
