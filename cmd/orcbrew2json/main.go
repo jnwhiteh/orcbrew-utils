@@ -55,24 +55,24 @@ func main() {
 
 	jsonString := treeToJSON(tt)
 
-	if *rawOutput {
-		fmt.Fprintf(os.Stdout, jsonString)
-	} else {
-		var prettyJSON bytes.Buffer
-		err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing JSON: %s\n%s", err, jsonString)
-
-			os.Exit(2)
-		}
-
-		fmt.Fprint(os.Stdout, prettyJSON.String())
-	}
-
 	if *noSave == false {
 		fName := strings.TrimSuffix(filename, filepath.Ext(filename))
 		fmt.Fprintf(os.Stdout, fmt.Sprintf("Saved to %s.json", fName))
 		ioutil.WriteFile(fmt.Sprintf("%s.json", fName), []byte(jsonString), 0)
+	} else {
+		if *rawOutput {
+			fmt.Fprintf(os.Stdout, jsonString)
+		} else {
+			var prettyJSON bytes.Buffer
+			err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error parsing JSON: %s\n%s", err, jsonString)
+
+				os.Exit(2)
+			}
+
+			fmt.Fprint(os.Stdout, prettyJSON.String())
+		}
 	}
 }
 
