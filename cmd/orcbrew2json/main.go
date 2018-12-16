@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -14,6 +15,7 @@ import (
 )
 
 var rawOutput = flag.Bool("raw", false, "Don't pretty-print JSON output")
+var noSave = flag.Bool("nosave", false, "Don't save the JSON output")
 
 func main() {
 	flag.Parse()
@@ -65,6 +67,12 @@ func main() {
 		}
 
 		fmt.Fprint(os.Stdout, prettyJSON.String())
+	}
+
+	if *noSave == false {
+		fName := strings.TrimSuffix(filename, filepath.Ext(filename))
+		fmt.Fprintf(os.Stdout, fmt.Sprintf("Saved to %s.json", fName))
+		ioutil.WriteFile(fmt.Sprintf("%s.json", fName), []byte(jsonString), 0)
 	}
 }
 
