@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"regexp"
 	"strings"
 
@@ -14,6 +15,7 @@ import (
 )
 
 var rawOutput = flag.Bool("raw", false, "Don't pretty-print JSON output")
+var noSave = flag.Bool("nosave", false, "Don't save the JSON output")
 
 func main() {
 	flag.Parse()
@@ -53,18 +55,24 @@ func main() {
 
 	jsonString := treeToJSON(tt)
 
-	if *rawOutput {
-		fmt.Fprintf(os.Stdout, jsonString)
+	if *noSave == false {
+		fName := strings.TrimSuffix(filename, filepath.Ext(filename))
+		fmt.Fprintf(os.Stdout, fmt.Sprintf("Saved to %s.json", fName))
+		ioutil.WriteFile(fmt.Sprintf("%s.json", fName), []byte(jsonString), 0)
 	} else {
-		var prettyJSON bytes.Buffer
-		err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "Error parsing JSON: %s\n%s", err, jsonString)
+		if *rawOutput {
+			fmt.Fprintf(os.Stdout, jsonString)
+		} else {
+			var prettyJSON bytes.Buffer
+			err = json.Indent(&prettyJSON, []byte(jsonString), "", "  ")
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "Error parsing JSON: %s\n%s", err, jsonString)
 
-			os.Exit(2)
+				os.Exit(2)
+			}
+
+			fmt.Fprint(os.Stdout, prettyJSON.String())
 		}
-
-		fmt.Fprint(os.Stdout, prettyJSON.String())
 	}
 }
 
